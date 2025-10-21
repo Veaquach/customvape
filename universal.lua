@@ -1,4 +1,4 @@
---This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.
+--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates. so pro
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then
@@ -57,8 +57,21 @@ local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('
 local lplr = playersService.LocalPlayer
 local assetfunction = getcustomasset
 
-local vape = shared.vape
-local tween = vape.Libraries.tween
+-- Line 59: Original line
+local vape
+
+-- START FIX
+-- Wait loop to ensure shared.vape is fully initialized
+local startTime = tick()
+while not shared.vape and tick() - startTime < 10 do -- Wait up to 10 seconds
+    task.wait(0.1)
+end
+
+vape = shared.vape -- Assign vape after the wait
+-- END FIX
+
+-- Line 60 (Original line 59): Now safe to access properties
+local tween = vape and vape.Libraries.tween -- Use 'and' for safety in case it's still nil
 local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
